@@ -1,0 +1,2 @@
+schema_name: 'dmcat'
+raw_data_location: 'abfss://landing@demstrgacc.dfs.core.windows.net/raw'
