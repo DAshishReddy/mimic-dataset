@@ -6,6 +6,10 @@ def ingest():
     config, _ = load_config()
     schema_name = config['schema_name']
     raw_data_location = config['raw_data_location']
+    spark.conf.set(
+    "fs.azure.account.key.stsalesashproject.dfs.core.windows.net", 
+    dbutils.secrets.get(scope="adls-storage-sales", key="stsalesashproject-account-key")
+)
     spark = G.spark
 
     spark.sql("""
