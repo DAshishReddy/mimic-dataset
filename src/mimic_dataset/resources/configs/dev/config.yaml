@@ -1,2 +1,3 @@
 schema_name: 'dmcat'
 raw_data_location: 'abfss://landing@stsalesashproject.dfs.core.windows.net/raw'
+spark.hadoop.fs.azure.account.key.stsalesashproject.dfs.core.windows.net: "{{secrets/adls-storage-sales/stsalesashproject-account-key}}"
