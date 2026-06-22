@@ -40,7 +40,7 @@ def ingest():
     #     "OUTPUTEVENTS.csv", "PRESCRIPTIONS.csv", "PROCEDUREEVENTS_MV.csv",
     #     "PROCEDURES_ICD.csv", "SERVICES.csv", "TRANSFERS.csv"
     # ] 
-    files = ["sales_details.csv"]
+    files = [ "sales_details.csv" ]
 
     print("Current User:", spark.sql("SELECT current_user()").collect())
 
