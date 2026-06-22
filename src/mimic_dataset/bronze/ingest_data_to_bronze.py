@@ -1,5 +1,3 @@
-from importlib.metadata import files
-
 from mimic_dataset.utils.globals import GlobalVariables as G
 from mimic_dataset.utils.file import load_config
 
@@ -46,48 +44,17 @@ def ingest():
 
     print("Current User:", spark.sql("SELECT current_user()").collect())
 
-#     for f in files:
-#         table_name = f.replace(".csv", "").lower() + "_raw"
-
-#         df = (spark.read
-#               .option("header", "true")
-#               .option("inferSchema", "true")
-#               .csv(f"{raw_data_location}/{f}"))
-
-#         (df.write
-#          .format("delta")
-#          .mode("overwrite")
-#          .saveAsTable(f"{schema_name}.bronze.{table_name}"))
-
-#         print(f"✅ Ingested: {f} -> bd_mimic.bronze.{table_name}")
-
-    print("CONFIG VALUES")
-    print(f"schema_name = {schema_name}")
-    print(f"raw_data_location = {raw_data_location}")
     for f in files:
-        print("=" * 50)
-        print(f"STARTING FILE = {f}")
-
         table_name = f.replace(".csv", "").lower() + "_raw"
 
-        full_path = f"{raw_data_location}/{f}"
+        df = (spark.read
+              .option("header", "true")
+              .option("inferSchema", "true")
+              .csv(f"{raw_data_location}/{f}"))
 
-        print(f"FULL PATH = {full_path}")
+        (df.write
+         .format("delta")
+         .mode("overwrite")
+         .saveAsTable(f"{schema_name}.bronze.{table_name}"))
 
-        df = (
-                spark.read
-                .option("header", "true")
-                .option("inferSchema", "true")
-                .csv(full_path)
-        )
-
-        print(f"READ SUCCESS = {f}")
-
-        (
-                df.write
-                .format("delta")
-                .mode("overwrite")
-                .saveAsTable(f"{schema_name}.bronze.{table_name}")
-        )
-
-        print(f"WRITE SUCCESS = {f}")  
+        print(f"✅ Ingested: {f} -> bd_mimic.bronze.{table_name}")
