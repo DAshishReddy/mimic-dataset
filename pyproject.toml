@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mimic_dataset"
+version = "0.1.2"
+description = "Mimic patients analysis python project."
+authors = [
+    { name = "Ram" }
+]
+
+dependencies = [
+    "databricks-sdk",
+    "PyYAML==6.0.2",
+    "setuptools~=78.1.1",
+    "pytest",
+    "pytest-cov",
+    "databricks-cli",
+    "databricks-genai-inference>=0.1.0",
+    "databricks-vectorsearch>=0.1.0",
+    "langchain-text-splitters>=0.1.0",
+    "pandas>=1.0.0",
+    "pyspark>=3.0.0"
+]
+
+# Entry point (FIXED - very important)
+[project.scripts]
+run = "mimic_dataset.main:main"
+
+# If you really need custom groups (rare)
+[project.entry-points."group_1"]
+run = "mimic_dataset.main:main"
+
+# Tell setuptools where code is
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# Include non-code files
+[tool.setuptools.package-data]
+mimic_dataset = ["resources/configs/**/*"]
