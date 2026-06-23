@@ -18,9 +18,11 @@ def ingest():
             CREATE DATABASE IF NOT EXISTS {schema_name}.gold
             """.format(schema_name=schema_name))
 
-    spark.sql("""
-            DROP TABLE IF EXISTS {schema_name}.bronze.raw_data
-            """.format(schema_name=schema_name))
+    # Drop table if exists
+    
+    spark.sql(f"""
+              DROP TABLE IF EXISTS {schema_name}.bronze.raw_data
+              """.format(schema_name=schema_name))
 
     # Create managed table using Delta format
     spark.sql(f"""
@@ -38,10 +40,9 @@ def ingest():
         table_name = f.replace(".csv", "").lower() + "_raw"
 
         df = (spark.read
-              .format("csv")
               .option("header", "true")
               .option("inferSchema", "true")
-              .load(f"{raw_data_location}/{f}"))
+              .csv(f"{raw_data_location}/{f}"))
 
         (df.write
          .format("delta")
