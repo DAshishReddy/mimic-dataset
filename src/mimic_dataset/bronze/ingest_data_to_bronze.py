@@ -18,13 +18,26 @@ def ingest():
             CREATE DATABASE IF NOT EXISTS {schema_name}.gold
             """.format(schema_name=schema_name))
 
+    # Drop table if exists
+    spark.sql("""
+              DROP TABLE IF EXISTS {schema_name}.bronze.raw_data
+              """.format(schema_name=schema_name))
+
+    # Create managed table using Delta format
     spark.sql(f"""
         CREATE TABLE IF NOT EXISTS {schema_name}.bronze.raw_data
         USING DELTA
     """)
 
     files = [
-        "sales_details.csv"
+        "ADMISSIONS.csv", "ICUSTAYS.csv", "PATIENTS.csv", "LABEVENTS.csv",
+        "CALLOUT.csv", "CAREGIVERS.csv", "CHARTEVENTS.csv", "CPTEVENTS.csv",
+        "DATETIMEEVENTS.csv", "DIAGNOSES_ICD.csv", "DRGCODES.csv",
+        "D_CPT.csv", "D_ICD_DIAGNOSES.csv", "D_ICD_PROCEDURES.csv",
+        "D_ITEMS.csv", "D_LABITEMS.csv", "INPUTEVENTS_CV.csv",
+        "INPUTEVENTS_MV.csv", "MICROBIOLOGYEVENTS.csv", "NOTEEVENTS.csv",
+        "OUTPUTEVENTS.csv", "PRESCRIPTIONS.csv", "PROCEDUREEVENTS_MV.csv",
+        "PROCEDURES_ICD.csv", "SERVICES.csv", "TRANSFERS.csv"
     ]
 
     print("Current User:", spark.sql("SELECT current_user()").collect())
