@@ -20,8 +20,8 @@ def ingest():
 
     # Drop table if exists
     spark.sql("""
-            DROP TABLE IF EXISTS {schema_name}.bronze.raw_data
-            """.format(schema_name=schema_name))
+             DROP TABLE IF EXISTS {schema_name}.bronze.raw_data
+             """.format(schema_name=schema_name))
 
     # Create managed table using Delta format
     spark.sql(f"""
