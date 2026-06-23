@@ -39,7 +39,7 @@ def ingest():
         table_name = f.replace(".csv", "").lower() + "_raw"
 
         df = (spark.read
-              .option("format", "csv")
+              .format("csv")
               .option("header", "true")
               .option("inferSchema", "true")
               .load(f"{raw_data_location}/{f}"))
