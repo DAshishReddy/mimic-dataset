@@ -6,7 +6,6 @@ def ingest():
     config, _ = load_config()
     schema_name = config['schema_name']
     raw_data_location = config['raw_data_location']
-    
     spark = G.spark
 
     spark.sql("""
@@ -19,27 +18,20 @@ def ingest():
             CREATE DATABASE IF NOT EXISTS {schema_name}.gold
             """.format(schema_name=schema_name))
 
-     Drop table if exists
+    # Drop table if exists
     spark.sql("""
               DROP TABLE IF EXISTS {schema_name}.bronze.raw_data
               """.format(schema_name=schema_name))
 
-     Create managed table using Delta format
+    # Create managed table using Delta format
     spark.sql(f"""
         CREATE TABLE IF NOT EXISTS {schema_name}.bronze.raw_data
         USING DELTA
     """)
 
-     files = [
-         "ADMISSIONS.csv", "ICUSTAYS.csv", "PATIENTS.csv", "LABEVENTS.csv",
-         "CALLOUT.csv", "CAREGIVERS.csv", "CHARTEVENTS.csv", "CPTEVENTS.csv",
-         "DATETIMEEVENTS.csv", "DIAGNOSES_ICD.csv", "DRGCODES.csv",
-         "D_CPT.csv", "D_ICD_DIAGNOSES.csv", "D_ICD_PROCEDURES.csv",
-         "D_ITEMS.csv", "D_LABITEMS.csv", "INPUTEVENTS_CV.csv",
-         "INPUTEVENTS_MV.csv", "MICROBIOLOGYEVENTS.csv", "NOTEEVENTS.csv",
-         "OUTPUTEVENTS.csv", "PRESCRIPTIONS.csv", "PROCEDUREEVENTS_MV.csv",
-         "PROCEDURES_ICD.csv", "SERVICES.csv", "TRANSFERS.csv"
-     ] 
+    files = [
+        "sales_details.csv"
+    ]
 
     print("Current User:", spark.sql("SELECT current_user()").collect())
 
@@ -47,9 +39,10 @@ def ingest():
         table_name = f.replace(".csv", "").lower() + "_raw"
 
         df = (spark.read
+              .option("format", "csv")
               .option("header", "true")
               .option("inferSchema", "true")
-              .csv(f"{raw_data_location}/{f}"))
+              .load(f"{raw_data_location}/{f}"))
 
         (df.write
          .format("delta")
